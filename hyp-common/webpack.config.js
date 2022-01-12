@@ -4,18 +4,12 @@ const singleSpaDefaults = require("webpack-config-single-spa-react-ts");
 module.exports = (webpackConfigEnv, argv) => {
   const defaultConfig = singleSpaDefaults({
     orgName: "hyp",
-    projectName: "navbar",
+    projectName: "common",
     webpackConfigEnv,
     argv,
   });
 
   return merge(defaultConfig, {
-    externals: [
-      "single-spa",
-      "react",
-      "react-dom",
-      "@hyp/common"
-      // "react-router-dom"
-    ],
+    // modify the webpack config however you'd like to by adding to this object
   });
 };

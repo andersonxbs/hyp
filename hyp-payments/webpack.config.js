@@ -10,6 +10,12 @@ module.exports = (webpackConfigEnv, argv) => {
   });
 
   return merge(defaultConfig, {
-    // externals: ['react-router-dom'],
+    externals: [
+      "single-spa",
+      "react",
+      "react-dom",
+      "@hyp/common"
+      // "react-router-dom"
+    ],
   });
 };

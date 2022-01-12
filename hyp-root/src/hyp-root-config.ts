@@ -17,7 +17,6 @@ fetch('http://localhost:8600/applications')
       routes: [{ type: "application", name: "error", error: pageNotFound }],
     })
 
-    console.log('app.config', app.config)
     const routes = constructRoutes(app.config);
 
     const applications = constructApplications({
@@ -36,3 +35,31 @@ fetch('http://localhost:8600/applications')
       urlRerouteOnly: true,
     });
   })
+
+// registerApplication(
+//   '@hyp/navbar',
+//   () => System.import('@hyp/navbar'),
+//   location => true
+// );
+
+// registerApplication(
+//   '@hyp/navbar',
+//   () => System.import('@hyp/navbar'),
+//   location => true
+// );
+
+// registerApplication(
+//   '@hyp/beauty',
+//   () => System.import('@hyp/beauty'),
+//   location => location.pathname.startsWith('beauty'),
+// );
+
+// registerApplication(
+//   '@hyp/payments',
+//   () => System.import('@hyp/payments'),
+//   location => location.pathname.startsWith('payments'),
+// );
+
+// start({
+//   urlRerouteOnly: true,
+// });

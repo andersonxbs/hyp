@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link, BrowserRouter } from 'react-router-dom';
 import logo from './logo.jpg';
+import { listenEvent, counterSubject } from '@hyp/common'
 
 export default function App({ name }) {
   const [items, setItems] = useState([]);
+  const [rxjsCount, setRxjsCount] = useState(0);
+  const [customEventCount, setCustomEventCount] = useState(0);
 
   //Similar to componentDidMount and componentDidUpdate:  
   useEffect(() => {    
@@ -12,6 +15,14 @@ export default function App({ name }) {
       .then(config => {
         setItems(config.navbar)
       })
+
+    listenEvent('@hyp/payments/counter/increment', ({ detail }) => {
+      setCustomEventCount(previousValue => previousValue + detail.incrementalValue)
+    })
+
+    counterSubject.subscribe({
+      next: (value) => setRxjsCount(previousValue => previousValue - value)
+    });
   }, []);
   
   return (
@@ -33,38 +44,16 @@ export default function App({ name }) {
           <div id="navbarBasicExample" className="navbar-menu">
             <div className="navbar-start">
               { items.map((item, i) => (<Link key={i} className="navbar-item" to={item.path}>{item.text}</Link>)) }
-
-              <div className="navbar-item has-dropdown is-hoverable">
-                <a className="navbar-link">
-                  More
-                </a>
-
-                <div className="navbar-dropdown">
-                  <a className="navbar-item">
-                    About
-                  </a>
-                  <a className="navbar-item">
-                    Jobs
-                  </a>
-                  <a className="navbar-item">
-                    Contact
-                  </a>
-                  <hr className="navbar-divider" />
-                  <a className="navbar-item">
-                    Report an issue
-                  </a>
-                </div>
-              </div>
             </div>
 
             <div className="navbar-end">
               <div className="navbar-item">
                 <div className="buttons">
                   <a className="button is-primary">
-                    <strong>Sign up</strong>
+                    <strong>Event { customEventCount }</strong>
                   </a>
                   <a className="button is-light">
-                    Log in
+                    RxJS { rxjsCount }
                   </a>
                 </div>
               </div>
