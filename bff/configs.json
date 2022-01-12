@@ -1,0 +1,27 @@
+{
+  "navbar": [
+    { "path": "/beauty", "text": "Beauty" },
+    { "path": "/payments", "text": "Payments" }
+  ],
+  "config": {
+    "routes": [
+      { "type": "application", "name": "@hyp/navbar" },
+      {
+        "type": "route",
+        "path": "/",
+        "exact": true,
+        "routes": [{ "type": "application", "name": "@hyp/navbar" }]
+      },
+      {
+        "type": "route",
+        "path": "beauty",
+        "routes": [{ "type": "application", "name": "@hyp/beauty" }]
+      },
+      {
+        "type": "route",
+        "path": "payments",
+        "routes": [{ "type": "application", "name": "@hyp/payments" }]
+      }
+    ]
+  }
+}

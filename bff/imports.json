@@ -1,0 +1,8 @@
+{
+  "imports": {
+    "@hyp/root-config": "//localhost:9000/hyp-root-config.js",
+    "@hyp/navbar": "http://localhost:8500/hyp-navbar.js",
+    "@hyp/beauty": "http://localhost:8501/hyp-beauty.js",
+    "@hyp/payments": "http://localhost:8502/hyp-payments.js"
+  }
+}
