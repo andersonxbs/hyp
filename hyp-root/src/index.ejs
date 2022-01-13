@@ -40,30 +40,12 @@
     }
   </script>
   
-  <link rel="preload" href="https://cdn.jsdelivr.net/npm/single-spa@5.9.0/lib/system/single-spa.min.js" as="script">
-  <link rel="preload" href="https://cdn.jsdelivr.net/npm/react@16.13.1/umd/react.production.min.js" as="script">
-  <link rel="preload" href="https://cdn.jsdelivr.net/npm/react-dom@16.13.1/umd/react-dom.production.min.js" as="script">
-  <link rel="preload" href="https://unpkg.com/react-router-dom@6.2.1/umd/react-router-dom.production.min.js" as="script">
+  <!-- <link rel="preload" href="https://cdn.jsdelivr.net/npm/single-spa@5.9.0/lib/system/single-spa.min.js" as="script"> -->
 
   <!-- Add your organization's prod import map URL to this script's src  -->
   <!-- <script type="systemjs-importmap" src="/importmap.json"></script> -->
 
   <% if (isLocal) { %>
-  <!-- <script>
-    const currentScript = document.currentScript;
-    (async function() {
-      const layer = localStorage.getItem("hyp-layer") || "production";
-      const response = await (await fetch("http://localhost:8600/imports", { headers: { 'hyp-layer': layer } })).json()
-      const im = document.createElement('script');
-      im.type = 'systemjs-importmap';  
-      im.textContent = JSON.stringify(response);
-      currentScript.after(im);
-    })()  
-  </script> -->
-  <!-- <script src="system.js">
-    const layer = localStorage.getItem("hyp-layer") || "production";
-    return fetch("http://localhost:8600/imports", { headers: { 'hyp-layer': layer } }).then(res => res.json());
-  </script> -->
   <!-- <script type="systemjs-importmap" src="/js/main.js"></script>  -->
   <% } %>
 
