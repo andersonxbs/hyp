@@ -6,7 +6,8 @@ import { listenEvent, counterSubject } from '@hyp/common'
 export default function App({ name }) {
   const [items, setItems] = useState([]);
   const [rxjsCount, setRxjsCount] = useState(0);
-  const [customEventCount, setCustomEventCount] = useState(0);
+  const [customEventPaymentsCount, setCustomEventPaymentsCount] = useState(0);
+  const [customEventBeautyCount, setCustomEventBeautyCount] = useState(0);
 
   //Similar to componentDidMount and componentDidUpdate:  
   useEffect(() => {    
@@ -17,11 +18,15 @@ export default function App({ name }) {
       })
 
     listenEvent('@hyp/payments/counter/increment', ({ detail }) => {
-      setCustomEventCount(previousValue => previousValue + detail.incrementalValue)
+      setCustomEventPaymentsCount(previousValue => previousValue + detail.incrementalValue)
+    })
+
+    listenEvent('@hyp/beauty/counter/increment', ({ detail }) => {
+      setCustomEventBeautyCount(previousValue => previousValue + detail.incrementalValue)
     })
 
     counterSubject.subscribe({
-      next: (value) => setRxjsCount(previousValue => previousValue - value)
+      next: (value) => setRxjsCount(previousValue => previousValue + value)
     });
   }, []);
   
@@ -50,7 +55,10 @@ export default function App({ name }) {
               <div className="navbar-item">
                 <div className="buttons">
                   <a className="button is-primary">
-                    <strong>Event { customEventCount }</strong>
+                    <strong>Payments Event { customEventPaymentsCount }</strong>
+                  </a>
+                  <a className="button is-primary">
+                    <strong>Beauty Event { customEventBeautyCount }</strong>
                   </a>
                   <a className="button is-light">
                     RxJS { rxjsCount }

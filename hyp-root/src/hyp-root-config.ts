@@ -1,40 +1,85 @@
 import { registerApplication, start } from "single-spa";
+import pageNotFound from './page-not-found.html';
 import {
   constructRoutes,
   constructApplications,
   constructLayoutEngine
 } from "single-spa-layout";
 
-import pageNotFound from './page-not-found.html';
+// async function getImportsByLayer() {
+//   const layer = localStorage.getItem("hyp-layer") || "production";
+//   const response = await fetch("http://localhost:8600/imports", { headers: { 'hyp-layer': layer } });
+//   return response.json();
+// }
 
-fetch('http://localhost:8600/applications')
-  .then(res => res.json())
-  .then(app => {
-    app.config.routes.push({
-      type: "route",
-      default: true,
-      // @ts-ignore
-      routes: [{ type: "application", name: "error", error: pageNotFound }],
-    })
+async function initApp() {
+  // const importsForLayer = (await getImportsByLayer()).imports;
 
-    const routes = constructRoutes(app.config);
+  // console.log('importsForLayer', importsForLayer);
 
-    const applications = constructApplications({
-      routes,
-      loadApp({ name }) {
-        return System.import(name);
-      },
-    });
+  const response = await fetch('http://localhost:8600/applications');
+  const appicationsInfo = await response.json();
 
-    constructLayoutEngine({ routes, applications });
+  appicationsInfo.config.routes.push({
+    type: "route",
+    default: true,
+    // @ts-ignore
+    routes: [{ type: "application", name: "error", error: pageNotFound }],
+  });
 
-    applications.forEach(registerApplication);
-  })
-  .finally(() => {
-    start({
-      urlRerouteOnly: true,
-    });
-  })
+  const routes = constructRoutes(appicationsInfo.config);
+
+  const applications = constructApplications({
+    routes,
+    loadApp({ name }) {
+      // const importAddress = importsForLayer[name]
+      
+      // console.log('name', name)
+      // console.log('importAddress', importAddress)
+
+      return System.import(name);
+    },
+  });
+
+  constructLayoutEngine({ routes, applications });
+
+  applications.forEach(registerApplication);
+
+  start({
+    urlRerouteOnly: true,
+  });
+}
+
+initApp();
+
+// fetch('http://localhost:8600/applications')
+//   .then(res => res.json())
+//   .then(app => {
+//     app.config.routes.push({
+//       type: "route",
+//       default: true,
+//       // @ts-ignore
+//       routes: [{ type: "application", name: "error", error: pageNotFound }],
+//     })
+
+//     const routes = constructRoutes(app.config);
+
+//     const applications = constructApplications({
+//       routes,
+//       loadApp({ name }) {
+//         return System.import(name);
+//       },
+//     });
+
+//     constructLayoutEngine({ routes, applications });
+
+//     applications.forEach(registerApplication);
+//   })
+//   .finally(() => {
+//     start({
+//       urlRerouteOnly: true,
+//     });
+//   })
 
 // registerApplication(
 //   '@hyp/navbar',

@@ -49,7 +49,22 @@
   <!-- <script type="systemjs-importmap" src="/importmap.json"></script> -->
 
   <% if (isLocal) { %>
-  <script type="systemjs-importmap" src="http://localhost:8600/imports"></script>
+  <!-- <script>
+    const currentScript = document.currentScript;
+    (async function() {
+      const layer = localStorage.getItem("hyp-layer") || "production";
+      const response = await (await fetch("http://localhost:8600/imports", { headers: { 'hyp-layer': layer } })).json()
+      const im = document.createElement('script');
+      im.type = 'systemjs-importmap';  
+      im.textContent = JSON.stringify(response);
+      currentScript.after(im);
+    })()  
+  </script> -->
+  <!-- <script src="system.js">
+    const layer = localStorage.getItem("hyp-layer") || "production";
+    return fetch("http://localhost:8600/imports", { headers: { 'hyp-layer': layer } }).then(res => res.json());
+  </script> -->
+  <!-- <script type="systemjs-importmap" src="/js/main.js"></script>  -->
   <% } %>
 
   <!--
@@ -75,7 +90,22 @@
   </noscript>
   <!-- <main></main> -->
   <script>
-    System.import('@hyp/root-config'); 
+    function newScriptElement(textContent) {
+      const element = document.createElement('script');
+      element.type = 'systemjs-importmap';  
+      element.textContent = JSON.stringify(textContent);
+      return element;
+    }
+
+    const currentScript = document.currentScript;
+    const layer = localStorage.getItem("hyp-layer") || "production";
+
+    fetch("http://localhost:8600/imports", { headers: { 'hyp-layer': layer } })
+      .then(res => res.json())
+      .then(importsMap => {
+        currentScript.before(newScriptElement(importsMap));
+        System.import('@hyp/root-config'); 
+      })    
   </script>
   <import-map-overrides-full show-when-local-storage="devtools" dev-libs></import-map-overrides-full>
 </body>

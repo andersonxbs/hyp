@@ -1,7 +1,7 @@
 {
   "navbar": [
-    { "path": "/beauty", "text": "Beauty" },
-    { "path": "/payments", "text": "Payments" }
+    { "path": "/payments", "text": "Payments" },
+    { "path": "/beauty", "text": "Beauty" }
   ],
   "config": {
     "routes": [
