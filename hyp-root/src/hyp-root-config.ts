@@ -1,39 +1,48 @@
 import { registerApplication, start } from "single-spa";
-import pageNotFound from './page-not-found.html';
+import pageNotFound from "./page-not-found.html";
 import {
   constructRoutes,
   constructApplications,
-  constructLayoutEngine
+  constructLayoutEngine,
 } from "single-spa-layout";
 
-async function initApp() {
-  const response = localStorage.getItem("apps");
-  const appicationsInfo = JSON.parse(response);
+const environmentKey = localStorage.getItem("ek");
 
-  appicationsInfo.routes.push({
+function injectFlagsInfoProps(routes: []) {
+  if (!routes) return;
+
+  routes.forEach((route: any) => {
+    if (route.type === "application") {
+      route.props = { ...route.props, flagsEnvironmentKey: environmentKey, flagsApi: "http://localhost:8000/api/v1/" }
+    } else {
+      injectFlagsInfoProps(route.routes)
+    }
+  });
+}
+
+async function initApp() {
+  const appicationsInfoAsString = localStorage.getItem("templ");
+  const applicationsInfo = JSON.parse(appicationsInfoAsString);
+
+  applicationsInfo.routes.push({
     type: "route",
     default: true,
-    // @ts-ignore
     routes: [{ type: "application", name: "error", error: pageNotFound }],
   });
 
-  const routes = constructRoutes(appicationsInfo);
+  injectFlagsInfoProps(applicationsInfo.routes)
 
+  const routes = constructRoutes(applicationsInfo);
   const applications = constructApplications({
     routes,
     loadApp({ name }) {
       return System.import(name);
-    }
+    },
   });
 
   constructLayoutEngine({ routes, applications });
 
-  applications.forEach(application => 
-    registerApplication(
-      { 
-        ...application, 
-        customProps: { flagsEnvironmentKey: "AzTqDA3W7XiaDLPZkfeNtg", flagsApi: "http://localhost:8000/api/v1/" } 
-      }));
+  applications.forEach((application) => registerApplication(application));
 
   start({
     urlRerouteOnly: true,

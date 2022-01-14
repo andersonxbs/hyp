@@ -73,9 +73,14 @@
   </noscript>
   <script>
     const currentScript = document.currentScript;
-    const key = localStorage.getItem("fek") || "AzTqDA3W7XiaDLPZkfeNtg";
+    const storageKey = "ek"
+    const environmentKey = localStorage.getItem(storageKey) || (() => {
+      const value = "AzTqDA3W7XiaDLPZkfeNtg"
+      localStorage.setItem(storageKey, value);
+      return value;
+    })();
 
-    fetch("http://localhost:8000/api/v1/flags", { headers: { 'x-environment-key': key } })
+    fetch("http://localhost:8000/api/v1/flags", { headers: { 'x-environment-key': environmentKey } })
       .then(res => res.json())
       .then(flags => {        
         const importsMap = flags.find(d => d.feature.name == 'imports_map').feature_state_value
@@ -85,7 +90,7 @@
         currentScript.before(element);
 
         const applicationsInfo = flags.find(d => d.feature.name == 'applications').feature_state_value
-        localStorage.setItem("apps", applicationsInfo)
+        localStorage.setItem("templ", applicationsInfo)
 
         System.import('@hyp/root-config'); 
       })    
