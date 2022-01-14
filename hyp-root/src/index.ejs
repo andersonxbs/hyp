@@ -35,7 +35,8 @@
         "single-spa": "https://cdn.jsdelivr.net/npm/single-spa@5.9.0/lib/system/single-spa.min.js",
         "react": "https://cdn.jsdelivr.net/npm/react@16.13.1/umd/react.production.min.js",
         "react-dom": "https://cdn.jsdelivr.net/npm/react-dom@16.13.1/umd/react-dom.production.min.js",
-        "react-router-dom": "https://unpkg.com/react-router-dom@6.2.1/umd/react-router-dom.production.min.js"
+        "react-router-dom": "https://unpkg.com/react-router-dom@6.2.1/umd/react-router-dom.production.min.js",
+        "flagsmith": "https://cdn.jsdelivr.net/npm/flagsmith/index.js"
       }
     }
   </script>
@@ -70,22 +71,22 @@
   <noscript>
     You need to enable JavaScript to run this app.
   </noscript>
-  <!-- <main></main> -->
   <script>
-    function newScriptElement(textContent) {
-      const element = document.createElement('script');
-      element.type = 'systemjs-importmap';  
-      element.textContent = JSON.stringify(textContent);
-      return element;
-    }
-
     const currentScript = document.currentScript;
-    const layer = localStorage.getItem("hyp-layer") || "production";
+    const key = localStorage.getItem("fek") || "AzTqDA3W7XiaDLPZkfeNtg";
 
-    fetch("http://localhost:8600/imports", { headers: { 'hyp-layer': layer } })
+    fetch("http://localhost:8000/api/v1/flags", { headers: { 'x-environment-key': key } })
       .then(res => res.json())
-      .then(importsMap => {
-        currentScript.before(newScriptElement(importsMap));
+      .then(flags => {        
+        const importsMap = flags.find(d => d.feature.name == 'imports_map').feature_state_value
+        const element = document.createElement('script');
+        element.type = 'systemjs-importmap';  
+        element.textContent = importsMap;
+        currentScript.before(element);
+
+        const applicationsInfo = flags.find(d => d.feature.name == 'applications').feature_state_value
+        localStorage.setItem("apps", applicationsInfo)
+
         System.import('@hyp/root-config'); 
       })    
   </script>

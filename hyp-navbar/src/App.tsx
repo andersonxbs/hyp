@@ -3,19 +3,26 @@ import { Link, BrowserRouter } from 'react-router-dom';
 import logo from './logo.jpg';
 import { listenEvent, counterSubject } from '@hyp/common'
 
-export default function App({ name }) {
-  const [items, setItems] = useState([]);
+export default function App(props) {
+  // const [items, setItems] = useState([]);
   const [rxjsCount, setRxjsCount] = useState(0);
   const [customEventPaymentsCount, setCustomEventPaymentsCount] = useState(0);
   const [customEventBeautyCount, setCustomEventBeautyCount] = useState(0);
 
+  const navApps = [
+    { "path": "/beauty", "text": "Beauty" },
+    { "path": "/payments", "text": "Payments" }
+  ]
+
+  console.log('navApps', props)
+
   //Similar to componentDidMount and componentDidUpdate:  
   useEffect(() => {    
-    fetch('http://localhost:8600/applications')
-      .then(res => res.json())
-      .then(config => {
-        setItems(config.navbar)
-      })
+    // fetch('http://localhost:8600/applications')
+    //   .then(res => res.json())
+    //   .then(config => {
+    //     setItems(config.navbar)
+    //   })
 
     listenEvent('@hyp/payments/counter/increment', ({ detail }) => {
       setCustomEventPaymentsCount(previousValue => previousValue + detail.incrementalValue)
@@ -48,7 +55,7 @@ export default function App({ name }) {
           
           <div id="navbarBasicExample" className="navbar-menu">
             <div className="navbar-start">
-              { items.map((item, i) => (<Link key={i} className="navbar-item" to={item.path}>{item.text}</Link>)) }
+              { navApps.map((item, i) => (<Link key={i} className="navbar-item" to={item.path}>{item.text}</Link>)) }
             </div>
 
             <div className="navbar-end">
